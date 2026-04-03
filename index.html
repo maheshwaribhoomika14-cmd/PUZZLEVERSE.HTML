@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PuzzleVerse</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(to right, #141e30, #243b55);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .box {
+      width: 100px;
+      height: 100px;
+      background: #00adb5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .empty {
+      background: transparent;
+      border: 2px dashed #ccc;
+      cursor: default;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background: #ff5722;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background: #ff784e;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>🧩 PuzzleVerse</h1>
+    <p>Solve the puzzle & test your brain!</p>
+
+    <div class="game-board" id="board"></div>
+
+    <button onclick="shuffle()">Start Game</button>
+  </div>
+
+  <script>
+    let board = document.getElementById("board");
+    let tiles = [1,2,3,4,5,6,7,8,""];
+
+    function renderBoard() {
+      board.innerHTML = "";
+      tiles.forEach((tile, index) => {
+        let div = document.createElement("div");
+        div.classList.add("box");
+
+        if(tile === "") {
+          div.classList.add("empty");
+        }
+
+        div.innerText = tile;
+        div.addEventListener("click", () => moveTile(index));
+
+        board.appendChild(div);
+      });
+    }
+
+    function moveTile(index) {
+      let emptyIndex = tiles.indexOf("");
+
+      let validMoves = [
+        index - 1,
+        index + 1,
+        index - 3,
+        index + 3
+      ];
+
+      if(validMoves.includes(emptyIndex)) {
+        [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+        renderBoard();
+        checkWin();
+      }
+    }
+
+    function shuffle() {
+      tiles.sort(() => Math.random() - 0.5);
+      renderBoard();
+    }
+
+    function checkWin() {
+      let win = [1,2,3,4,5,6,7,8,""];
+      if(JSON.stringify(tiles) === JSON.stringify(win)) {
+        setTimeout(() => alert("🎉 You Win!"), 200);
+      }
+    }
+
+    renderBoard();
+  </script>
+
+</body>
+</html>
